@@ -26,22 +26,26 @@ int main(void)
 	int n;
 	char buf[BUFFSIZE];
 	
-    	int filedesc = open("testfile.txt", O_WRONLY | O_APPEND);
+    int filedesc = open("output.log", O_WRONLY | O_APPEND |O_CREAT, 0666);
  
-    	if (filedesc < 0) {
-        	return -1;
-   	 }	
-	
-
-	while ((n = read(STDIN_FILENO, buf, BUFFSIZE)) > 0)
+	if (filedesc < 0) {
+		err_sys("error opening file");
+	}	
+	if (write(filedesc, "==========================\n", 27) != 27) {
+         		err_sys("write to file error");
+		}
+	while ((n = read(STDIN_FILENO, buf, BUFFSIZE)) > 0){
 		if (write(STDOUT_FILENO, buf, n) != n)
 			err_sys("write error");
 		if (write(filedesc, buf, n) != n) {
-        		write(2, "There was an error writing to testfile.txt\n", 43);
-        		return -1;
+         		err_sys("write to file error");
 		}
-
+	}
 	if (n < 0) err_sys("read error");
+
+	if (write(filedesc, "==========================\n", 27) != 27) {
+         		err_sys("write to file error");
+		}
 
 	exit(0);
 }

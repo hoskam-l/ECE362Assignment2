@@ -8,7 +8,7 @@ CXXFLAGS = -std=c99 -Wall
 LDFLAGS = 
 
 # Makefile settings - Can be customized.
-APPNAME = myapp
+APPNAME = log
 EXT = .c
 SRCDIR = src
 OBJDIR = obj
@@ -17,6 +17,7 @@ OBJDIR = obj
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
+OUT = $(-f *.out)
 # UNIX-based OS variables & settings
 RM = rm
 DELOBJ = $(OBJ)
@@ -51,6 +52,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
 .PHONY: clean
 clean:
 	$(RM) $(DELOBJ) $(DEP) $(APPNAME)
+	rm -f *.log
 
 # Cleans only all files with the extension .d
 .PHONY: cleandep
@@ -62,6 +64,7 @@ cleandep:
 .PHONY: cleanw
 cleanw:
 	$(DEL) $(WDELOBJ) $(DEP) $(APPNAME)$(EXE)
+	rm -f *.log
 
 # Cleans only all files with the extension .d
 .PHONY: cleandepw
