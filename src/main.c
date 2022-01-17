@@ -16,8 +16,8 @@
 
 void err_sys(char *msg)
 {
-	fprintf(stderr, "%s (%s)\n", msg, strerror(errno));
-	exit(1);
+    perror(msg);
+    exit(1);
 }
 
 int main(void)
@@ -25,13 +25,13 @@ int main(void)
 	int n;
 	char buf[BUFFSIZE];
 
-	int filedesc = open("output.log", O_WRONLY | O_APPEND | O_CREAT, 0666);
+	int fd = open("output.log", O_WRONLY | O_APPEND | O_CREAT, 0666);
 
-	if (filedesc < 0)
+	if (fd < 0)
 	{
 		err_sys("error opening file");
 	}
-	if (write(filedesc, "==========================\n", 28) != 28)
+	if (write(fd, "==========================\n", 28) != 28)
 	{
 		err_sys("write to file error");
 	}
@@ -39,7 +39,7 @@ int main(void)
 	{
 		if (write(STDOUT_FILENO, buf, n) != n)
 			err_sys("write error");
-		if (write(filedesc, buf, n) != n)
+		if (write(fd, buf, n) != n)
 		{
 			err_sys("write to file error");
 		}
@@ -47,7 +47,7 @@ int main(void)
 	if (n < 0)
 		err_sys("read error");
 
-	if (write(filedesc, "==========================\n", 28) != 28)
+	if (write(fd, "==========================\n", 28) != 28)
 	{
 		err_sys("write to file error");
 	}

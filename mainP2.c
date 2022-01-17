@@ -16,78 +16,92 @@
 
 void err_sys(char *msg)
 {
-    fprintf(stderr, "%s (%s)\n", msg, strerror(errno));
+    perror(msg);
     exit(1);
 }
 
 int main(int argc, char *argv[])
 {
-    int bufSize = 0;
-    int i;
-    int n;
+    int n = 1;  // number of lines to read
+    int i;  // indexing number for loops
     bool hasBuf = false;
     bool hasFilename = false;
-    char *filename = NULL;
-    int filenamePos = 0;
-
-    if (argc < 4)
+    int filenamePos = 0;    // position of the filename in argv[]
+    char buffer[10];        // buffer size
+    
+    // check to see if there is
+    if (argc < 4)    
     {
 
         for (i = 1; i < argc; i++)
         {
             if (*(argv[i] + 0) == '-') // (*(argv[i]+0)) refrences the first character of each element
             {
-                if (!hasBuf)
+                if (!hasBuf)    // set the number of lines to read if not set
                 {
-                    bufSize = atoi(argv[i]) * (-1);
+                    n = atoi(argv[i]) * (-1);
                     hasBuf = true;
-                    printf("%d\n", bufSize);
                 }
-                else
+                else    // send error saying too many buffer modifiers sent
                 {
-                    err_sys("ERROR: too many buffers!");
+                    err_sys("ERROR: too many line modifiers for number of lines to read!\n Entry should be: \n [header -<numLines> <filename>]\n");  //maybe change this to a printf or write
                 }
             }
-
             else
             {
-                if (!hasFilename)
+                if (!hasFilename) //set the filename if not set
                 {
                     filenamePos = i;
                     hasFilename = true;
                 }
                 else
                 {
-                    err_sys("ERROR: too many file names!");
+                    err_sys("ERROR: too many file names!\n Entry should be: \n [header -<numLines> <filename>]\n"); //maybe change this to a printf or write
                 }
             }
         }
     }
     else
     {
-        err_sys("ERROR: too many arguments!");
+        err_sys("ERROR: too many arguments! \n Entry should be: \n [header -<numLines> <filename>]\n"); //maybe change this to a printf or write
     }
-    printf("%s", argv[filenamePos]);
-
-    system("clear");
-    if (!hasBuf)
+    char filename[sizeof(argv[filenamePos])+1]; //create a variable to hold the filename to be in accordance with the instructions... argv[filenamePos] would work though.
+    strcpy(filename,argv[filenamePos]);
+    int fd;
+    if (hasFilename) // if filename is set, open that file for reading
     {
-        bufSize = 10;
+        fd = open(filename, O_RDONLY);
+        if(fd == -1){
+            err_sys("ERROR: failed to open file!");
+        }
     }
-    if (!hasFilename)
+    else    // if no filename is set open STDIN for input
     {
-        char prompt[] = "Enter a filename then press ctrl-c: \n";
-        
-        {
-            if (write(STDOUT_FILENO, prompt, 37) != 37)
+        fd = STDIN_FILENO;
+    }
+    int numRead = 0;    // number of characters read by the read function
+    int lineCount = 0;  // number of lines read by the read function
+    while (lineCount < n && (numRead = read(fd, buffer, 10)))   // keep reading until there is an error reading OR we have read all the desired lines
+    {
+        if(numRead == -1){  // read returns -1 if there was an error reading
+            err_sys("ERROR: Failed to read!");
+        }
+        for(int i = 0; i < numRead; i++){  // cyle though the buffer to find the number of characters read before the '\n' character if no '\n' char numRead will be 10
+            if(buffer[i] == '\n')       
             {
-                err_sys("write error");
+                lineCount++;
+                if(lineCount >= n)
+                {
+                    numRead = i+1;  // need to add 1 to include the '\n' character and set this as the buffer size.
+                }
+
             }
         }
-        while ((n = read(STDIN_FILENO, filename, bufSize)) > 0)
-        {
-            
+        write(STDOUT_FILENO, buffer, numRead);  // write the line read to STDOUT
+        if(numRead == -1){
+            err_sys("ERROR: Failed to write!");
         }
     }
-    printf("%s", filename);
+    close(fd);  // dont forget to close the file
+   
 }
