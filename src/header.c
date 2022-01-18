@@ -1,3 +1,9 @@
+// ECE362
+// Assignment 2 Problem 2
+// Dr. Schubert
+// by luke hoskam
+// Solution for Problem2
+
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32
@@ -28,11 +34,11 @@ int main(int argc, char *argv[])
     bool hasFilename = false;
     int filenamePos = 0; // position of the filename in argv[]
     char buffer[10];     // buffer size
+    int hasError = 0;
 
     // check to see if there is
     if (argc < 4)
     {
-
         for (i = 1; i < argc; i++)
         {
             if (*(argv[i] + 0) == '-') // (*(argv[i]+0)) refrences the first character of each element
@@ -44,6 +50,11 @@ int main(int argc, char *argv[])
                 }
                 else // send error saying too many buffer modifiers sent
                 {
+                    hasError = write(STDERR_FILENO, "Argument Error", 14); // write the line read to STDOUT
+                    if (hasError == -1)
+                    {
+                        err_sys("ERROR: Failed to write to STDERR!");
+                    }
                     err_sys("ERROR: too many line modifiers for number of lines to read!\n Entry should be: \n [header -<numLines> <filename>]\n"); // maybe change this to a printf or write
                 }
             }
@@ -99,8 +110,8 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        write(STDOUT_FILENO, buffer, numRead); // write the line read to STDOUT
-        if (numRead == -1)
+        hasError = write(STDOUT_FILENO, buffer, numRead); // write the line read to STDOUT
+        if (hasError == -1)
         {
             err_sys("ERROR: Failed to write!");
         }

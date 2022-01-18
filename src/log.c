@@ -1,3 +1,9 @@
+// ECE362
+// Assignment 2 Problem 1
+// Dr. Schubert
+// by luke hoskam
+// Solution for Problem1
+
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32
@@ -28,28 +34,28 @@ int main(void)
 	int fd = open("output.log", O_WRONLY | O_APPEND | O_CREAT, 0666); 
 	
 	if (fd < 0)
-	{ // Error handling for opening the file
-		err_sys("error opening file");
+	{ 
+		err_sys("error opening file"); // Error handling for opening the file
 	}
 	if (write(fd, "==========================\n", 28) != 28)  // write required seperator bars in the file
-	{ // Error handling for writing to file
-		err_sys("write to file error"); 
+	{ 
+		err_sys("write to file error"); // Error handling for writing to file
 	}
-	while ((n = read(STDIN_FILENO, buf, BUFFSIZE)) > 0) 
+	while ((n = read(STDIN_FILENO, buf, BUFFSIZE)) > 0)  // Read from STDIN and set the number read to n 
 	{
-		if (write(STDOUT_FILENO, buf, n) != n)
-			err_sys("write error");
-		if (write(fd, buf, n) != n)
-		{// Error handling for writing to file
-			err_sys("write to file error"); 
+		if (write(STDOUT_FILENO, buf, n) != n) // write to STDOUT
+			err_sys("write error"); // Error handling for STDOUT
+		if (write(fd, buf, n) != n) // Write to file
+		{
+			err_sys("write to file error"); // Error handling for writing to file
 		}
 	}
 	if (n < 0)
 		err_sys("read error");
 	// This is to create a double bar in between file openings. 
 	if (write(fd, "==========================\n", 28) != 28) // write required seperator bars in the file
-	{ // Error handling for writing to file
-		err_sys("write to file error"); 
+	{ 
+		err_sys("write to file error"); // Error handling for writing to file
 	}
 	exit(0);
 }
