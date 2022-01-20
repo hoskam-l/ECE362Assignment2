@@ -6,19 +6,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef _WIN32
-#include <io.h>
-#define STDIN_FILENO 0
-#define STDOUT_FILENO 1
-#define STDERR_FILENO 2
-#else
 #include <unistd.h>
-#endif
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdbool.h>
-#include <string.h>
+
+#define BUFFSIZE 10
 
 void err_sys(char *msg)
 {
@@ -33,7 +27,7 @@ int main(int argc, char *argv[])
     bool hasBuf = false;
     bool hasFilename = false;
     int filenamePos = 0; // position of the filename in argv[]
-    char buffer[10];     // buffer size
+    char buffer[BUFFSIZE];
     int hasError = 0;
 
     // check to see if there is
@@ -50,12 +44,12 @@ int main(int argc, char *argv[])
                 }
                 else // send error saying too many buffer modifiers sent
                 {
-                    hasError = write(STDERR_FILENO, "Argument Error", 14); // write the line read to STDOUT
+                    hasError = write(STDERR_FILENO, "Argument Error", 14);
                     if (hasError == -1)
                     {
                         err_sys("ERROR: Failed to write to STDERR!");
                     }
-                    err_sys("ERROR: too many line modifiers for number of lines to read!\n Entry should be: \n [header -<numLines> <filename>]\n"); // maybe change this to a printf or write
+                    err_sys("ERROR: too many line modifiers for number of lines to read!\n Entry should be: \n [header -<numLines> <filename>]\n");
                 }
             }
             else
@@ -67,22 +61,21 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    err_sys("ERROR: too many file names!\n Entry should be: \n [header -<numLines> <filename>]\n"); // maybe change this to a printf or write
+                    err_sys("ERROR: too many file names!\n Entry should be: \n [header -<numLines> <filename>]\n");
                 }
             }
         }
     }
     else
     {
-        err_sys("ERROR: too many arguments! \n Entry should be: \n [header -<numLines> <filename>]\n"); // maybe change this to a printf or write
+        err_sys("ERROR: too many arguments! \n Entry should be: \n [header -<numLines> <filename>]\n");
     }
     char filename[sizeof(argv[filenamePos]) + 1]; // create a variable to hold the filename to be in accordance with the instructions... argv[filenamePos] would work though.
     strcpy(filename, argv[filenamePos]);
     int fd;
     if (hasFilename) // if filename is set, open that file for reading
     {
-        fd = open(filename, O_RDONLY);
-        if (fd == -1)
+        if((fd = open(filename, O_RDONLY)) == -1);
         {
             err_sys("ERROR: failed to open file!");
         }
@@ -91,9 +84,9 @@ int main(int argc, char *argv[])
     {
         fd = STDIN_FILENO;
     }
-    int numRead = 0;                                          // number of characters read by the read function
-    int lineCount = 0;                                        // number of lines read by the read function
-    while (lineCount < n && (numRead = read(fd, buffer, 10))) // keep reading until there is an error reading OR we have read all the desired lines
+    int numRead = 0;                                                // number of characters read by the read function
+    int lineCount = 0;                                              // number of lines read by the read function
+    while (lineCount < n && (numRead = read(fd, buffer, BUFFSIZE))) // keep reading until there is an error reading OR we have read all the desired lines
     {
         if (numRead == -1)
         { // read returns -1 if there was an error reading
@@ -110,11 +103,13 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        hasError = write(STDOUT_FILENO, buffer, numRead); // write the line read to STDOUT
+        hasError = write(STDOUT_FILENO, buffer, numRead);
         if (hasError == -1)
         {
             err_sys("ERROR: Failed to write!");
         }
     }
     close(fd); // dont forget to close the file
+
+    return 0;
 }

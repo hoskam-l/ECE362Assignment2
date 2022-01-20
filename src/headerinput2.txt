@@ -3,6 +3,7 @@ Now for Line 2
 And now line 3
 
 short
+i
 and this is line 4
 
 We end on line 5

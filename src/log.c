@@ -6,14 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef _WIN32
-#include <io.h>
-#define STDIN_FILENO 0
-#define STDOUT_FILENO 1
-#define STDERR_FILENO 2
-#else
 #include <unistd.h>
-#endif
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>

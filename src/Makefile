@@ -16,8 +16,7 @@ CC = gcc
 CXXFLAGS = -std=c99 -Wall
 TESTFLAGS = output.log -3
 VPATH = SRC INCLUDE 
-#    .---------- constant part!
-#    vvvv vvvv-- the code from above
+
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 CYAN='\033[0;36m'
