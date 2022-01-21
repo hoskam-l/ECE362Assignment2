@@ -39,19 +39,19 @@ log.o: log.c
 	$(CC) $(CXXFLAGS) -c $<
 
 logtest: log
-	@echo -e                        ${RED}added three empty lines for clarity${NC}
+	@echo -e                        ${RED}added three lines (this incl.) for clarity${NC}
 	@echo 
 	@echo 
 	./log $(TESTLOG1)
 	./log $(TESTLOG2)
 	./log $(TESTLOG3)
-	@echo -e                        ${RED}added three empty lines for clarity${NC}
+	@echo -e                        ${RED}added three lines (this incl.) for clarity${NC}
 	@echo 
 	@echo 
 	cat output.log
-	@echo -e                        ${RED}added three empty lines for clarity${NC}
+	@echo -e                        ${RED}added three lines (this incl.) for clarity${NC}
 	@echo 
-	@echo 
+	@echo -e                        ${RED}END OF LOG TEST${NC}
 
 $(APPNAME2): header.o
 	$(CC) $(CXXFLAGS) -o $@ $^ 
@@ -60,16 +60,16 @@ header.o: header.c
 	$(CC) $(CXXFLAGS) -c $<
 
 headertest: header
-	@echo -e                        ${RED}added three empty lines for clarity${NC}
+	@echo -e                        ${RED}added three lines (this incl.) for clarity${NC}
 	@echo 
 	@echo 
 	./header $(TESTHEADER1)
 	./header $(TESTHEADER2)
 	./header $(TESTHEADER3)
 	./header $(TESTHEADER4)
-	@echo -e                        ${RED}added three empty lines for clarity${NC}
+	@echo -e                        ${RED}added three lines (this incl.) for clarity${NC}
 	@echo 
-	@echo 
+	@echo -e                        ${RED}END OF HEADER TEST${NC}
 
 all : clean clearscr help logtest headertest 
 
