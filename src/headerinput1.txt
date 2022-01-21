@@ -4,4 +4,4 @@ And now line 3
 short
 i
 
-last line.
+last line is line 7.

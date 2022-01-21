@@ -14,7 +14,13 @@
 # Compiler settings
 CC = gcc 
 CXXFLAGS = -std=c99 -Wall
-TESTFLAGS = output.log -3
+TESTLOG1 = < loginput1.txt
+TESTLOG2 = < loginput2.txt
+TESTLOG3 = < loginput3.txt
+TESTHEADER1 = < headerinput1.txt
+TESTHEADER2 = -12 < headerinput2.txt
+TESTHEADER3 = -10 < headerinput3.txt
+TESTHEADER4 = -16 headerinput3.txt
 VPATH = SRC INCLUDE 
 
 RED='\033[0;31m'
@@ -26,29 +32,29 @@ CYAN='\033[0;36m'
 APPNAME1 = log
 APPNAME2 = header
 
-log: log.o
+$(APPNAME1): log.o
 	$(CC) $(CXXFLAGS) -o $@ $^ 
 
 log.o: log.c
 	$(CC) $(CXXFLAGS) -c $<
 
 logtest: log
-	./log < loginput1.txt
-	./log < loginput2.txt
-	./log < loginput3.txt
+	./log $(TESTLOG1)
+	./log $(TESTLOG2)
+	./log $(TESTLOG3)
 	cat output.log
 
-header: header.o
+$(APPNAME2): header.o
 	$(CC) $(CXXFLAGS) -o $@ $^ 
 
 header.o: header.c 
 	$(CC) $(CXXFLAGS) -c $<
 
 headertest: header
-	./header < headerinput1.txt
-	./header -12 < headerinput2.txt
-	./header -10 < headerinput3.txt
-	./header -15 headerinput3.txt
+	./header $(TESTHEADER1)
+	./header $(TESTHEADER2)
+	./header $(TESTHEADER3)
+	./header $(TESTHEADER4)
 
 all : clean clearscr help logtest headertest 
 

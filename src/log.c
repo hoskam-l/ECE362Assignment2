@@ -36,8 +36,8 @@ int main(void)
 	}
 	while ((n = read(STDIN_FILENO, buf, BUFFSIZE)) > 0)  // Read from STDIN and set the number read to n 
 	{
-		if (write(STDOUT_FILENO, buf, n) != n) // write to STDOUT
-			err_sys("write error"); // Error handling for STDOUT
+		if (write(STDOUT_FILENO, buf, n) != n) 
+			err_sys("write error"); 
 		if (write(fd, buf, n) != n) // Write to file
 		{
 			err_sys("write to file error"); // Error handling for writing to file
@@ -48,7 +48,7 @@ int main(void)
 	// This is to create a double bar in between file openings. 
 	if (write(fd, "==========================\n", 28) != 28) // write required seperator bars in the file
 	{ 
-		err_sys("write to file error"); // Error handling for writing to file
+		err_sys("write to file error"); 
 	}
 	exit(0);
 }

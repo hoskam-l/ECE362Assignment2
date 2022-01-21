@@ -20,6 +20,8 @@ void err_sys(char *msg)
     exit(1);
 }
 
+
+
 int main(int argc, char *argv[])
 {
     int n = 1; // number of lines to read
@@ -75,7 +77,8 @@ int main(int argc, char *argv[])
     int fd;
     if (hasFilename) // if filename is set, open that file for reading
     {
-        if((fd = open(filename, O_RDONLY)) == -1);
+        fd = open(filename, O_RDONLY);
+        if(fd == -1)
         {
             err_sys("ERROR: failed to open file!");
         }
