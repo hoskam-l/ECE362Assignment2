@@ -39,10 +39,15 @@ log.o: log.c
 	$(CC) $(CXXFLAGS) -c $<
 
 logtest: log
+	@echo 
 	./log $(TESTLOG1)
+	@echo 
 	./log $(TESTLOG2)
+	@echo 
 	./log $(TESTLOG3)
+	@echo 
 	cat output.log
+	@echo 
 
 $(APPNAME2): header.o
 	$(CC) $(CXXFLAGS) -o $@ $^ 
@@ -51,10 +56,15 @@ header.o: header.c
 	$(CC) $(CXXFLAGS) -c $<
 
 headertest: header
+	@echo 
 	./header $(TESTHEADER1)
+	@echo 
 	./header $(TESTHEADER2)
+	@echo 
 	./header $(TESTHEADER3)
+	@echo 
 	./header $(TESTHEADER4)
+	@echo 
 
 all : clean clearscr help logtest headertest 
 
