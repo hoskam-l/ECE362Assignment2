@@ -6,4 +6,4 @@ short
 i
 and this is line 7
 
-We end on line 9
+We end the file on line 9
