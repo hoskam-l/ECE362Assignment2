@@ -13,6 +13,7 @@
 #include <stdbool.h>
 
 #define BUFFSIZE 10
+#define DEFAULT_NUM_LINE 1
 
 void err_sys(char *msg)
 {
@@ -24,7 +25,7 @@ void err_sys(char *msg)
 
 int main(int argc, char *argv[])
 {
-    int n = 1; // number of lines to read
+    int n = DEFAULT_NUM_LINE; // number of lines to read
     int i;     // indexing number for loops
     bool hasBuf = false;
     bool hasFilename = false;
